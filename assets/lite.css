@@ -1,0 +1,18 @@
+/* Launch-lite placeholder pages (home + Ringwell). Uses the tokens from style.css. */
+.h-hero.lite{min-height:min(100svh,880px);display:flex;align-items:center;padding:clamp(112px,14vw,176px) 0 clamp(56px,8vw,104px)}
+.h-hero.lite .wrap{display:block}
+.lite .name{display:inline-flex;align-items:center;gap:9px;margin:0 0 clamp(18px,2.4vw,28px);font:700 1.0625rem/1 var(--display);letter-spacing:-.01em;color:var(--green)}
+.lite .name svg{width:24px;height:24px;flex:none}
+.lite .name circle{fill:none;stroke:var(--green);stroke-width:6}
+.h-hero.lite h1{font-size:clamp(2.5rem,1.1rem + 5.6vw,6.5rem);max-width:10em}
+.lite .lead{font-size:clamp(1.1875rem,1.05rem + .6vw,1.625rem);margin-top:.8em;max-width:24em}
+.lite .acts{position:relative;z-index:1;margin:clamp(24px,3vw,36px) 0 0}
+.facts{position:relative;z-index:1;list-style:none;margin:clamp(36px,5vw,64px) 0 0;padding:0;max-width:30em;display:grid;gap:0;border-top:1px solid var(--line)}
+.facts li{position:relative;padding:15px 0 15px 30px;border-bottom:1px solid var(--line);color:var(--ink);font-weight:500;line-height:1.45}
+.facts li::before{content:"";position:absolute;left:2px;top:1.35em;width:12px;height:12px;border-radius:50%;border:2.5px solid var(--green)}
+.facts li:first-child::before{border-color:var(--signal)}
+@media (max-width:420px){.soon{white-space:normal}}
+.lite .acts .go+.go{margin-left:8px}
+.go.alt{background:transparent;color:var(--ink);box-shadow:none;border:1.5px solid var(--line-2)}
+.go.alt:hover{background:var(--line);box-shadow:none}
+@media (max-width:420px){.lite .acts .go+.go{margin:10px 0 0}}
