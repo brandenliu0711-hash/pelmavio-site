@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ringwell · Set medication alarms by voice</title>
-<meta name="description" content="Ringwell by Pelmavio Studio: set medication alarms by voice. Coming soon to the App Store. Ring well. Live well.">
+<title>Ringwell: Medication Alarms</title>
+<meta name="description" content="Ringwell sets medication alarms by voice. Say a whole prescription in one sentence, hear it read back, confirm, and a real alarm rings. Your data stays on your phone.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F0F6F1" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#09110D" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pelmavio Studio">
-<meta property="og:title" content="Ringwell · Set medication alarms by voice">
-<meta property="og:description" content="Ringwell by Pelmavio Studio: set medication alarms by voice. Coming soon to the App Store. Ring well. Live well.">
+<meta property="og:title" content="Ringwell: Medication Alarms">
+<meta property="og:description" content="Ringwell sets medication alarms by voice. Say a whole prescription in one sentence, hear it read back, confirm, and a real alarm rings. Your data stays on your phone.">
 <meta property="og:url" content="https://pelmavio.com/ringwell/">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
@@ -21,31 +21,204 @@
 <link rel="alternate" hreflang="zh-CN" href="https://pelmavio.com/ringwell/zh/">
 <link rel="alternate" hreflang="x-default" href="https://pelmavio.com/ringwell/">
 <link rel="stylesheet" href="../assets/style.css">
-<link rel="stylesheet" href="../assets/lite.css">
+<link rel="stylesheet" href="../assets/gallery.css">
+<script src="../assets/ringwell.js"></script>
 </head>
-<body>
+<body class="rw">
 <a class="skip" href="#main">Skip to content</a>
 <header class="top over"><div class="wrap">
 <a class="logo" href="../" aria-label="Pelmavio Studio"><svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="10.5"/></svg><span>Pelmavio</span></a>
-<nav aria-label="Main"><a class="hide-s" href="support/">Support</a><a class="hide-s" href="privacy/">Privacy</a><a class="lang" href="zh/" hreflang="zh-CN" lang="zh-CN">中文</a></nav>
+<nav aria-label="Main"><a class="hide-s" href="#story">How it works</a><a class="hide-s" href="#privacy">Privacy</a><a class="lang" href="../ringwell/zh/" hreflang="zh-CN" lang="zh-CN">中文</a></nav>
 </div></header>
 <main id="main">
-<section class="h-hero lite" aria-labelledby="home-h">
-<div class="h-ring" aria-hidden="true"><svg viewBox="0 0 100 100" focusable="false"><circle class="r2" cx="50" cy="50" r="46"/><circle class="r1" cx="50" cy="50" r="31"/><g><circle class="tick" style="--i:0" cx="50" cy="4" r="1.6"/><circle class="tick" style="--i:1" cx="73" cy="10.16" r="1.1"/><circle class="tick" style="--i:2" cx="89.84" cy="27" r="1.1"/><circle class="tick" style="--i:3" cx="96" cy="50" r="1.1"/><circle class="tick" style="--i:4" cx="89.84" cy="73" r="1.1"/><circle class="tick" style="--i:5" cx="73" cy="89.84" r="1.1"/><circle class="tick" style="--i:6" cx="50" cy="96" r="1.1"/><circle class="tick" style="--i:7" cx="27" cy="89.84" r="1.1"/><circle class="tick" style="--i:8" cx="10.16" cy="73" r="1.1"/><circle class="tick" style="--i:9" cx="4" cy="50" r="1.1"/><circle class="tick" style="--i:10" cx="10.16" cy="27" r="1.1"/><circle class="tick" style="--i:11" cx="27" cy="10.16" r="1.1"/></g></svg></div>
+
+<section class="story" id="story" aria-labelledby="top-h">
+<div class="stage" data-act="0" data-screen="listen">
+<div class="caps">
+<div class="cap cap0">
+<h1 id="top-h">Set medication alarms by voice.</h1>
+<p class="sub">Set alarms by simply talking.</p>
+<p class="cap-soon"><span class="soon"><i></i>Coming soon to the App Store</span></p>
+</div>
+<div class="say">
+<p class="sr">Example sentence: &ldquo;Two tablets of amoxicillin after meals, morning and evening, for five days.&rdquo;</p>
+<div class="voice" aria-hidden="true"><span class="mic"><svg viewBox="0 0 24 24" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></span><span class="wave"><i style="--h:.3"></i><i style="--h:.5"></i><i style="--h:.8"></i><i style="--h:.45"></i><i style="--h:.95"></i><i style="--h:.6"></i><i style="--h:.35"></i><i style="--h:.7"></i><i style="--h:1"></i><i style="--h:.55"></i><i style="--h:.4"></i><i style="--h:.75"></i><i style="--h:.5"></i><i style="--h:.9"></i><i style="--h:.65"></i><i style="--h:.3"></i><i style="--h:.55"></i><i style="--h:.85"></i><i style="--h:.4"></i><i style="--h:.6"></i><i style="--h:.3"></i><i style="--h:.45"></i><i style="--h:.2"></i><i style="--h:.3"></i></span></div>
+<p class="sentence" aria-hidden="true"><span class="nw"><span class="w q" style="--i:0">&ldquo;</span><span class="phr" data-f="dose" data-tag="Dose"><span class="w" style="--i:0">Two</span> <span class="w" style="--i:1">tablets</span></span></span> <span class="w" style="--i:2">of</span> <span class="phr" data-f="med" data-tag="Medication"><span class="w" style="--i:3">amoxicillin</span></span> <span class="nw"><span class="phr" data-f="timing" data-tag="Timing"><span class="w" style="--i:4">after</span> <span class="w" style="--i:5">meals</span></span><span class="w q" style="--i:5">,</span></span> <span class="nw"><span class="phr" data-f="time" data-tag="Time"><span class="w" style="--i:6">morning</span> <span class="w" style="--i:7">and</span> <span class="w" style="--i:8">evening</span></span><span class="w q" style="--i:8">,</span></span> <span class="nw"><span class="phr" data-f="course" data-tag="Duration"><span class="w" style="--i:9">for</span> <span class="w" style="--i:10">five</span> <span class="w" style="--i:11">days</span></span><span class="w q" style="--i:11">.&rdquo;</span></span></p>
+</div>
+<div class="cap cap1">
+<h2>One sentence. The whole plan.</h2>
+<p>Say the medication, the dose, the timing, the times and how long to take it, all together. Ringwell fills in the form for you.</p>
+</div>
+<div class="cap cap2">
+<h2>Hear it back. Then confirm.</h2>
+<p>Ringwell reads the plan back to you. Fix anything that is wrong. Nothing is saved until you confirm.</p>
+</div>
+<div class="cap cap3">
+<h2>Then a real alarm rings.</h2>
+<p>Not a quiet notification: a system alarm, set with Apple&rsquo;s AlarmKit (iOS 26 or later). Until you mark the dose as done, it rings again every 5 minutes, up to 11 more times.</p>
+<p class="stopnote"><strong>Stop only silences it.</strong> It does not mark the dose as done.</p>
+<ol class="chain" aria-hidden="true"><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ol>
+<p class="status" aria-hidden="true"><span class="st1">8:00 &middot; ringing</span><span class="st2">Stopped. Not done yet.</span><span class="st3">8:05 &middot; ringing again, 2 of 12</span></p>
+</div>
+<div class="cap cap4">
+<h2>Mark as done. That&rsquo;s the record.</h2>
+<p>Marking the dose as done is its own step, separate from Stop. It logs the dose and the rings stop. Day by day, your week fills in.</p>
+</div>
+</div>
+
+<div class="device">
+<div class="dial" aria-hidden="true">
+<svg viewBox="0 0 100 100" focusable="false"><circle class="track" cx="50" cy="50" r="46" pathLength="1"/><circle class="close" cx="50" cy="50" r="46" pathLength="1"/>
+<g class="dots"><circle style="--i:0" cx="50" cy="4" r="1.9"/><circle style="--i:1" cx="73" cy="10.16" r="1.9"/><circle style="--i:2" cx="89.84" cy="27" r="1.9"/><circle style="--i:3" cx="96" cy="50" r="1.9"/><circle style="--i:4" cx="89.84" cy="73" r="1.9"/><circle style="--i:5" cx="73" cy="89.84" r="1.9"/><circle style="--i:6" cx="50" cy="96" r="1.9"/><circle style="--i:7" cx="27" cy="89.84" r="1.9"/><circle style="--i:8" cx="10.16" cy="73" r="1.9"/><circle style="--i:9" cx="4" cy="50" r="1.9"/><circle style="--i:10" cx="10.16" cy="27" r="1.9"/><circle style="--i:11" cx="27" cy="10.16" r="1.9"/></g>
+<g class="lbl"><text x="53.6" y="3">8:00</text><text x="76.6" y="9">8:05</text><text x="23.4" y="9" text-anchor="end">8:55</text></g></svg>
+<div class="ripples"><i></i><i></i><i></i></div>
+</div>
+<div class="phone" aria-hidden="true">
+<div class="scr s-listen">
+<div class="ui-pad">
+<p class="ui-date">Tue, Oct 20</p>
+<p class="ui-title">Listening&hellip;</p>
+<p class="ui-trans"><span class="w" style="--i:0">Two</span> <span class="w" style="--i:1">tablets</span> <span class="w" style="--i:2">of</span> <span class="w" style="--i:3">amoxicillin</span> <span class="w" style="--i:4">after</span> <span class="w" style="--i:5">meals,</span> <span class="w" style="--i:6">morning</span> <span class="w" style="--i:7">and</span> <span class="w" style="--i:8">evening,</span> <span class="w" style="--i:9">for</span> <span class="w" style="--i:10">five</span> <span class="w" style="--i:11">days.</span></p>
+<div class="ui-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+<span class="ui-mic"><svg viewBox="0 0 24 24" focusable="false"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3"/></svg></span>
+<span class="ui-btn ui-ghost">I&rsquo;m done</span>
+</div>
+</div>
+<div class="scr s-confirm">
+<div class="ui-pad">
+<p class="ui-back"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Back</p>
+<p class="ui-title">Please confirm</p>
+<p class="ui-sub">You can fix anything that&rsquo;s wrong</p>
+<div class="ui-card ui-rb"><p class="ui-thinking">Understanding&hellip;</p><p class="ui-readback"><span style="--k:0">Every day at 8:00&nbsp;AM and 8:00&nbsp;PM,</span> <span style="--k:1">after meals:</span> <span style="--k:2">Amoxicillin, 2&nbsp;tablets,</span> <span style="--k:3">until Oct&nbsp;24.</span> <span style="--k:4">Is that right?</span></p><p class="ui-row2"><span class="ui-btn ui-soft"><svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>Stop</span><span class="ui-btn ui-soft"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 11a8 8 0 0 0-14.3-4.9M4 4v4h4M4 13a8 8 0 0 0 14.3 4.9M20 20v-4h-4"/></svg>Say again</span></p></div>
+<dl class="ui-fields"><div data-f="med"><dt>Medication</dt><dd>Amoxicillin</dd></div><div data-f="dose"><dt>Dose</dt><dd>2 tablets</dd></div><div data-f="timing"><dt>Timing</dt><dd>After meals</dd></div><div data-f="time"><dt>Time</dt><dd>8:00 AM, 8:00 PM</dd></div><div data-f="course"><dt>Duration</dt><dd>5 days, until Oct 24</dd></div></dl>
+<span class="ui-btn ui-solid ui-save"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Yes, save</span>
+</div>
+<p class="ui-toast"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Reminder set.</p>
+</div>
+<div class="scr s-alarm">
+<div class="ui-lock">
+<p class="ui-lockdate">Tuesday, October 20</p>
+<p class="ui-locktime"><span class="t1">8:00</span><span class="t2">8:05</span></p>
+<div class="ui-alert">
+<p class="ui-alert-h"><span class="ui-appicon"><svg viewBox="0 0 32 32" focusable="false"><circle cx="16" cy="16" r="8"/></svg></span><span class="n1">Amoxicillin</span><span class="n2">Amoxicillin &middot; 2 of 12</span></p>
+<span class="ui-stop"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>Stop</span>
+</div>
+</div>
+</div>
+<div class="scr s-dose">
+<div class="ui-pad">
+<p class="ui-back"><svg viewBox="0 0 24 24" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>Back</p>
+<p class="ui-title">Confirm</p>
+<p class="ui-warn"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17v.5"/></svg>Stop on the alarm only silences it. It does not mark the dose as done.</p>
+<div class="ui-card ui-plain">
+<p class="ui-dose-h">8:00 AM &middot; Amoxicillin</p>
+<p class="ui-dose-s">2 tablets &middot; After meals</p>
+<p class="ui-state"><span class="pend"><i></i>Pending</span><span class="done"><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i>Done</span></p>
+<span class="ui-btn ui-solid ui-mark"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Mark as done</span>
+<span class="ui-btn ui-line">Skip this dose</span>
+</div>
+</div>
+</div>
+<div class="scr s-week">
+<div class="ui-pad">
+<p class="ui-title ui-big">History</p>
+<p class="ui-sub">This week</p>
+<p class="ui-seg"><span class="on">Week</span><span>Month</span></p>
+<p class="ui-range">Oct 18 &ndash; Oct 24</p>
+<div class="ui-card ui-sum"><p>This week you&rsquo;ve completed all 10&nbsp;doses.</p></div>
+<ol class="ui-days"><li class="none"><b>Sun</b><i></i><small>&ndash;</small></li><li class="none"><b>Mon</b><i></i><small>&ndash;</small></li><li style="--d:1"><b>Tue</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li style="--d:2"><b>Wed</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li style="--d:3"><b>Thu</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li style="--d:4"><b>Fri</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li style="--d:5"><b>Sat</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li></ol>
+<p class="ui-hl-h">Highlights</p>
+<p class="ui-hl"><span>Days with all doses done</span><b>5 of 5 days</b></p>
+</div>
+</div>
+</div>
+</div>
+
+<a class="skipstory" href="#screens">Skip the story<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+<nav class="rail" aria-label="Story steps"><ol><li><a href="#story" data-go="0">Say</a></li><li><a href="#story" data-go="1">Understand</a></li><li><a href="#story" data-go="2">Confirm</a></li><li><a href="#story" data-go="3">Ring</a></li><li><a href="#story" data-go="4">Done</a></li></ol></nav>
+<p class="sample">Screens show sample data.</p>
+</div>
+</section>
+
+<section class="shots" id="screens" aria-labelledby="shots-h">
 <div class="wrap">
-<p class="name"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="16" r="10.5"/></svg>Ringwell</p>
-<h1 id="home-h"><span class="nb">Set medication</span> <span class="nb">alarms by voice</span></h1>
-<p class="lead">Set alarms by simply talking</p>
-<p class="acts"><span class="soon"><i></i>Coming soon to the App Store</span></p>
-<ul class="facts"><li>Say it, and get a real iOS alarm that re-rings if you haven&rsquo;t confirmed.</li><li>Every dose is recorded.</li><li>Your data is kept on your phone. No account.</li></ul>
+<h2 id="shots-h">A look inside</h2>
+<p class="lead">Real screenshots from iPhone, Ringwell 1.0.</p>
+<ul class="shot-list" aria-label="Screenshots">
+<li><figure><picture><source type="image/webp" srcset="../assets/shots/rw-en-voice.webp"><img src="../assets/shots/rw-en-voice.png" width="540" height="1174" alt="Ringwell voice screen: a microphone button with example phrases, such as “I took my medication”, and buttons for I’m done, Restart and Type it." loading="lazy" decoding="async"></picture><figcaption>Say it, we organize it</figcaption></figure></li>
+<li><figure><picture><source type="image/webp" srcset="../assets/shots/rw-en-today.webp"><img src="../assets/shots/rw-en-today.png" width="540" height="1174" alt="Ringwell Today screen: a ring shows the next dose, Vitamin D at 10:00 PM, with a Mark as done button and today’s doses, 1 of 2 done." loading="lazy" decoding="async"></picture><figcaption>See today at a glance</figcaption></figure></li>
+<li><figure><picture><source type="image/webp" srcset="../assets/shots/rw-en-meds.webp"><img src="../assets/shots/rw-en-meds.png" width="540" height="1174" alt="Ringwell Medications screen: Amoxicillin, 2 tablets at 8:00 AM and 9:00 PM, and Vitamin D, 1 tablet at bedtime at 10:00 PM." loading="lazy" decoding="async"></picture><figcaption>Each med, its own schedule</figcaption></figure></li>
+<li><figure><picture><source type="image/webp" srcset="../assets/shots/rw-en-history.webp"><img src="../assets/shots/rw-en-history.png" width="540" height="1174" alt="Ringwell History screen for one week: 8 of 8 doses done so far, with a ring for each day." loading="lazy" decoding="async"></picture><figcaption>See your dose history</figcaption></figure></li>
+</ul>
+</div>
+</section>
+
+<section class="record" id="record" aria-labelledby="rec-h">
+<div class="wrap record-in">
+<div class="record-copy">
+<h2 id="rec-h">Every dose, on the record.</h2>
+<p class="lead">Your week sits on one screen, one circle per day, so you can see at a glance which days are complete.</p>
+<dl class="facts"><div><dt>Fill in later</dt><dd>Doses that weren&rsquo;t confirmed are listed, so you can add them if you took them.</dd></div><div><dt>Stop is not done</dt><dd>Silencing an alarm never counts as taking a dose. Only you can mark it done.</dd></div></dl>
+</div>
+<figure class="shot">
+<div class="shot-ring" aria-hidden="true"><svg viewBox="0 0 100 100" focusable="false"><circle cx="50" cy="50" r="48" pathLength="1"/></svg></div>
+<div class="frame"><div class="hist" role="img" aria-label="Ringwell History screen for this week: 7 of 8 doses completed. Tuesday, Wednesday and Friday are complete, Thursday has 1 of 2 done, and the missed Thursday dose is listed under To fill in.">
+<div class="ui-pad">
+<p class="ui-hd"><span class="ui-title ui-big">History</span><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.6v.4"/></svg></p>
+<p class="ui-sub">This week</p>
+<p class="ui-seg"><span class="on">Week</span><span>Month</span></p>
+<p class="ui-nav"><i><svg viewBox="0 0 24 24" focusable="false"><path d="M15 5l-7 7 7 7"/></svg></i><span>Oct 18 &ndash; Oct 24</span><i><svg viewBox="0 0 24 24" focusable="false"><path d="M9 5l7 7-7 7"/></svg></i></p>
+<p class="ui-chips"><span class="on"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>All medications</span><span>Amoxicillin</span></p>
+<div class="ui-card ui-sum2"><p class="b">This week you&rsquo;ve completed 7&nbsp;of&nbsp;8 doses.</p><p>1 not confirmed (on 1 day, see below).</p></div>
+<ol class="ui-week"><li class="none"><b>Sun</b><i></i><small>&nbsp;</small></li><li class="none"><b>Mon</b><i></i><small>&nbsp;</small></li><li class="ok" style="--d:0"><b>Tue</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li class="ok" style="--d:1"><b>Wed</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li class="half" style="--d:2"><b>Thu</b><i></i><small>1/2</small></li><li class="ok today" style="--d:3"><b>Fri</b><i><svg viewBox="0 0 24 24" focusable="false"><path d="M6 12.5l4 4L18 8"/></svg></i><small>2/2</small></li><li class="fut"><b>Sat</b><i></i><small>&nbsp;</small></li></ol>
+<p class="ui-rv-h">To fill in</p>
+<div class="ui-rv"><span class="ui-miss"><svg viewBox="0 0 24 24" focusable="false"><path d="M7 7l10 10M17 7L7 17"/></svg></span><span class="ui-rv-t">Thu, Oct 22&nbsp;&middot; 1&nbsp;dose<small>Amoxicillin</small></span><span class="ui-btn ui-soft">I took it earlier</span></div>
+<p class="ui-hl-h">Highlights</p>
+<p class="ui-hl"><span>Days with all doses done</span><b>3&nbsp;of&nbsp;4&nbsp;days</b></p>
+</div></div></div>
+<figcaption>Recreated from the app&rsquo;s History screen and text. Sample data.</figcaption>
+</figure>
+</div>
+</section>
+
+<section class="vault" id="privacy" aria-labelledby="priv-h">
+<div class="wrap">
+<h2 id="priv-h">Your medication list stays on your phone.</h2>
+<ul class="claims">
+<li><b>On your phone.</b><span>Medications and dose history are stored only on your device.</span></li>
+<li><b>Data Not Collected.</b><span>No server receives your medication data. No ads, no analytics.</span></li>
+<li><b>No account.</b><span>Nothing to sign up for. Open the app and start talking.</span></li>
+</ul>
+<p class="fine">Voice input uses Apple&rsquo;s built-in speech recognition. Details are in the <a href="../ringwell/privacy/">privacy policy</a>.</p>
+</div>
+</section>
+
+<section class="tongues" id="languages" aria-labelledby="lang-h">
+<div class="wrap">
+<h2 id="lang-h">Say it in English or Chinese.</h2>
+<div class="pair-say">
+<p lang="en"><span>&ldquo;Two tablets of amoxicillin after meals, morning and evening, for five days.&rdquo;</span><small>English</small></p>
+<p lang="zh-CN"><span>&ldquo;每天早晚饭后吃两片阿莫西林，吃五天。&rdquo;</span><small>中文</small></p>
+</div>
+<dl class="spec"><div><dt>Works on</dt><dd>iPhone only, iOS 26 or later</dd></div><div><dt>Alarms</dt><dd>System alarms through AlarmKit</dd></div><div><dt>Languages</dt><dd>English and Chinese</dd></div></dl>
+</div>
+</section>
+
+<section class="finale" id="soon" aria-labelledby="soon-h">
+<div class="wrap">
+<div class="bigring" aria-hidden="true"><svg viewBox="0 0 100 100" focusable="false"><circle cx="50" cy="50" r="40" pathLength="1"/></svg></div>
+<h2 id="soon-h">Coming soon to the App Store.</h2>
+<p class="lead">Ringwell is not on the App Store yet, so there is nothing to download from this page. Questions before then? Write to <a href="mailto:support@pelmavio.com">support@pelmavio.com</a>.</p>
+<p><a class="go" href="../ringwell/support/">Contact support</a></p>
+<div class="safety"><p><strong>Ringwell only reminds and records. It is not medical advice.</strong> Alarms may not ring because of your phone&rsquo;s settings, permissions or system limits, so please don&rsquo;t rely on it as your only safeguard.</p></div>
 </div>
 </section>
 </main>
 <footer><div class="wrap">
 <p class="tag" lang="en">Ring well. Live well.</p>
-<nav class="links" aria-label="Footer"><a href="privacy/">Privacy</a><a href="support/">Support</a><a href="zh/" hreflang="zh-CN" lang="zh-CN">中文</a><a href="mailto:support@pelmavio.com">support@pelmavio.com</a></nav>
+<nav class="links" aria-label="Footer"><a href="../ringwell/">Ringwell</a><a href="../ringwell/support/">Support</a><a href="../ringwell/privacy/">Privacy</a><a href="../ringwell/zh/" hreflang="zh-CN" lang="zh-CN">中文</a><a href="mailto:support@pelmavio.com">support@pelmavio.com</a></nav>
 <p class="disc"><strong>Ringwell only reminds and records. It is not medical advice.</strong> Alarms may not ring because of your phone&rsquo;s settings, permissions or system limits, so please don&rsquo;t rely on it as your only safeguard.</p>
-<p>No account, no ads, no analytics scripts or cookies on this site. Medication data is kept on your phone. See the <a href="privacy/">privacy policy</a>.</p>
+<p>No account, no ads, no analytics. Medication data stays on your phone. See the <a href="../ringwell/privacy/">privacy policy</a>.</p>
 <p>&copy; 2026 &middot; Pelmavio Studio, operated by YU LIU</p>
 </div></footer>
 </body>

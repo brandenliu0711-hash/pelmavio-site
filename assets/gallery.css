@@ -1,0 +1,11 @@
+/* Real iPhone screenshots of Ringwell 1.0 ("A look inside"), Ringwell pages only. Static, no script. */
+.shots{padding:clamp(72px,11vw,160px) 0 clamp(24px,4vw,56px)}
+.shots h2{font-size:clamp(2.125rem,1.2rem + 3.6vw,4.5rem);line-height:1;letter-spacing:-.036em}
+:lang(zh) .shots h2{line-height:1.18}
+.shot-list{list-style:none;margin:clamp(36px,5vw,64px) 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,4vw,44px) clamp(14px,3vw,32px)}
+@media (min-width:760px){.shot-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.shot-list figure{margin:0;max-width:270px}
+.shot-list picture{display:block}
+.shot-list img{display:block;width:100%;height:auto;border-radius:11%/5%;background:var(--paper-2);box-shadow:0 0 0 1px var(--line),0 18px 40px -22px var(--shadow)}
+.shot-list figcaption{margin-top:14px;font:600 clamp(.9375rem,.88rem + .25vw,1.0625rem)/1.35 var(--display);color:var(--ink);text-wrap:balance}
+@media (prefers-color-scheme:dark){.shot-list img{box-shadow:0 0 0 1px var(--line-2),0 18px 40px -22px var(--shadow)}}
