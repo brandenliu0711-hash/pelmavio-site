@@ -537,6 +537,9 @@ footer .disc strong{color:var(--ink)}
 .h-ring .tick{fill:var(--paper);stroke:var(--ink-3);stroke-width:.35}
 .h-ring .tick:first-child{fill:var(--signal);stroke:var(--signal)}
 @media (max-width:899px){.h-ring{right:-38vw;top:auto;bottom:-30vw;translate:0 0;width:96vw;opacity:.75}}
+@media (max-width:899px){.h-hero:not(.lite) .h-ring{position:relative;display:block;right:auto;top:auto;bottom:auto;translate:none;width:clamp(64px,16vw,112px);opacity:1;margin:-48px var(--edge) 16px auto}}
+/* narrow screens: decorative rings stay clear of text (the record ring hugs the phone, the privacy-band circle is dropped) */
+@media (max-width:899px){.shot-ring{width:118%}.vault::before{display:none}.pair-say{grid-template-columns:minmax(0,1fr)}.pair-say span{overflow-wrap:anywhere}}
 .feature{background:var(--forest);color:var(--forest-ink);padding:clamp(72px,10vw,150px) 0;overflow:hidden;position:relative}
 .feature .wrap{display:grid;gap:56px;align-items:center}
 .feature .name{font:600 1.0625rem/1 var(--display);letter-spacing:-.01em;color:var(--forest-2);margin:0 0 18px;display:inline-flex;align-items:center;gap:10px}
