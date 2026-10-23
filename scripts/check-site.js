@@ -102,7 +102,9 @@ for (const j of jsFiles) {
   const t = fs.readFileSync(j, 'utf8');
   if (/https?:\/\/|fetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource|document\.cookie|localStorage|sessionStorage|indexedDB|importScripts|import\s*\(/.test(t)) err(rel(j) + ' 含网络请求或存储调用');
 }
-const jsBytes = (h, full) => [...h.matchAll(/<script[^>]*src="([^"]+)"/g)].reduce((n, m) => { const t = resolve(full, m[1]); return n + (t ? fs.statSync(t).size : 0); }, 0);
+// 体积按线上实际字节计：仓库存 LF，Windows 工作区的 CRLF 不算（GitHub Pages 发出的是 LF）
+const served = (t) => Buffer.byteLength(t.split(String.fromCharCode(13)).join(''));
+const jsBytes = (h, full) => [...h.matchAll(/<script[^>]*src="([^"]+)"/g)].reduce((n, m) => { const t = resolve(full, m[1]); return n + (t ? served(fs.readFileSync(t, 'utf8')) : 0); }, 0);
 const css = fs.readFileSync(path.join(root, 'assets/style.css'), 'utf8');
 if (/https?:\/\/|@import/.test(css)) err('style.css 含外部资源');
 // sitemap 只含存在的页面，且覆盖所有页面
@@ -118,7 +120,7 @@ for (const p of pages) {
 for (const hp of ['index.html', 'zh/index.html']) {
   const full = path.join(root, hp);
   const h = fs.readFileSync(full, 'utf8');
-  const code = Buffer.byteLength(h) + Buffer.byteLength(css) + jsBytes(h, full);
+  const code = served(h) + served(css) + jsBytes(h, full);
   const imgs = new Set([...h.matchAll(/<img\b[^>]*\bsrc="([^"]+)"/g)].map((m) => m[1]));
   let imgBytes = 0;
   for (const u of imgs) { const t = resolve(full, u); if (t) imgBytes += fs.statSync(t).size; }
@@ -130,7 +132,7 @@ for (const hp of ['index.html', 'zh/index.html']) {
 // 每页体积预算（D-142）：HTML + CSS + JS（不含图片）< 150KB
 for (const p of pages) {
   const h = fs.readFileSync(p, 'utf8');
-  const code = Buffer.byteLength(h) + Buffer.byteLength(css) + jsBytes(h, p);
+  const code = served(h) + served(css) + jsBytes(h, p);
   if (code > 150 * 1024) err(rel(p) + ' HTML+CSS+JS 超过 150KB（' + (code / 1024).toFixed(1) + 'KB）');
 }
 // App 版本检查配置（D-110）：ringwell/app-config.json 必须是合法 JSON，minSupportedVersion 为版本号；写错的字段 App 会忽略，这里提前拦住
