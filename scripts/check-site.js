@@ -146,7 +146,12 @@ for (const p of pages) {
   if (!ver(o.minSupportedVersion)) err('app-config.json: minSupportedVersion 必须是版本号字符串');
   for (const k of ['latestVersion', 'forceUntilVersion']) if (o[k] !== undefined && !ver(o[k])) err('app-config.json: ' + k + ' 必须是版本号字符串');
   for (const k of ['message_en', 'message_zh']) if (o[k] !== undefined && (typeof o[k] !== 'string' || o[k].length > 300)) err('app-config.json: ' + k + ' 必须是不超过 300 字的字符串');
-  const known = ['minSupportedVersion', 'latestVersion', 'forceUntilVersion', 'message_en', 'message_zh', '_note'];
+  if (o.apiBase !== undefined) {
+    const m = typeof o.apiBase === 'string' && o.apiBase.length <= 200 ? /^https:\/\/([a-z0-9.-]+)\/api\/ringwell\/v1\/?$/.exec(o.apiBase) : null;
+    const host = m ? m[1] : '';
+    if (!m || !(host === 'app-studio-api.onrender.com' || (host.endsWith('.pelmavio.com') && host.length > '.pelmavio.com'.length))) err('app-config.json: apiBase 必须是 https://<白名单主机>/api/ringwell/v1（主机：app-studio-api.onrender.com 或 *.pelmavio.com）');
+  }
+  const known = ['minSupportedVersion', 'latestVersion', 'forceUntilVersion', 'message_en', 'message_zh', 'apiBase', '_note'];
   for (const k of Object.keys(o)) if (!known.includes(k)) err('app-config.json: 未知字段 ' + k);
   const zero = ver(o.minSupportedVersion) && o.minSupportedVersion.replace(/^v/, '').split(/[.+-]/).every((x) => x === '0' || !/^\d+$/.test(x));
   console.log('ringwell/app-config.json：minSupportedVersion ' + o.minSupportedVersion + (zero ? '（不强制）' : '（会对低于此版本的用户强制更新！）'));
