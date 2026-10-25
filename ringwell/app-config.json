@@ -2,5 +2,6 @@
   "minSupportedVersion": "0.0.0",
   "latestVersion": "1.0.0",
   "message_en": "",
-  "message_zh": ""
+  "message_zh": "",
+  "apiBase": "https://app-studio-api.onrender.com/api/ringwell/v1"
 }
