@@ -107,12 +107,17 @@
     var isActive = false, mobile = false, geo = null;
     var P, env = new Spring(0, 1, 0.22);
     var ready = false, settleUntil = 0, beat = -1, act = -1, screen = '', prevSay = 0, running = false, last = 0, wasActive = false;
+    /* phones: zoom into the app over this part of the story progress; z = 0 hero, 1 inside the app */
+    var Z0 = 0.012, Z1 = 0.09, app = false, lastPose = '';
+    var MOBILE_VARS = ['--wt', '--W', '--vvh', '--cap-line', '--say-x', '--say-y', '--say-w', '--say-fs', '--st-y', '--sn-y'];
 
     /* everything that needs layout is read here, once per resize, never inside the scroll loop */
     function measure() {
       isActive = getComputedStyle(stage).position === 'sticky';
       mobile = w.innerWidth < 900;
       if (!isActive) return;
+      if (mobile) geo = zoomGeo();
+      else { geo = null; MOBILE_VARS.forEach(function (p) { stage.style.removeProperty(p); }); }
       for (var i = 0; i < ghosts.length; i++) {
         var G = ghosts[i];
         G.tf = parseFloat(getComputedStyle(G.dd).fontSize) || 12;
@@ -121,73 +126,54 @@
         G.dh = G.dd.offsetHeight;
         G.m = true;
       }
-      geo = mobile ? camera() : null;
-      if (!mobile) ['--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
-      if (act >= 0) place(beat, act);
+      lastPose = '';
     }
 
-    /* phones: per act, the window under the caption; per beat, a camera position that keeps
-       the region of interest (the field being filled, the alert, the Mark as done card...) in view */
-    function camera() {
-      var H = stage.clientHeight, W = phone.offsetWidth, Hp = phone.offsetHeight;
-      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 10;
-      /* acts 3-4: the phone steps back just enough for the dial to crown it, but its text stays >= ~14.5px */
-      var base = parseFloat(getComputedStyle(q('.ui-pad')).fontSize) || 16;
-      var vw = w.innerWidth, S = clamp(14.5 / base, 0.8, 0.9), margin = 14;
-      var D = Math.min(vw - 10, W * S + 72), R = D / 2, half = W * S / 2;
-      var arc = R - Math.sqrt(Math.max(0, R * R - half * half)) + 8;
-      var acts = [];
-      for (var a = 0; a < caps.length; a++) {
-        var c = caps[a], bottom = c.offsetTop + c.offsetHeight;
-        if (a <= 1) bottom = Math.max(bottom, say.offsetTop + say.offsetHeight);
-        /* acts 0-1: leave room for the field tags that hang under the sentence */
-        var wt = Math.round(capTop + bottom + (a <= 1 ? 22 : 12)), s = a >= 3 ? S : 1;
-        var y0 = wt + (a >= 3 ? arc : 0);
-        acts.push({ wt: wt, s: s, y0: y0, win: winBottom - y0 });
-      }
-      /* the week view (beats 15+) no longer needs the dial: the phone steps up into its place */
-      var a4 = acts[4];
-      acts.push({ wt: a4.wt, s: a4.s, y0: a4.wt, win: winBottom - a4.wt });
-      function span(a, b) {
-        var A = q(a), B = b ? q(b) : A;
-        if (!A || !B) return null;
-        return [offIn(A, phone), offIn(B, phone) + B.offsetHeight];
-      }
-      var scrC = q('.s-confirm');
-      var focus = [
-        null,
-        span('.s-confirm .ui-title', '.s-confirm .ui-rb')
-      ];
-      for (var k = 0; k < 5; k++) focus.push(ghosts[k] ? span('.s-confirm [data-f="' + ghosts[k].dd.parentNode.getAttribute('data-f') + '"]') : null);
-      focus.push(span('.s-confirm .ui-rb'));
-      focus.push(scrC ? [offIn(q('.s-confirm .ui-save'), phone), offIn(scrC, phone) + scrC.offsetHeight] : null);
-      for (var r = 9; r <= 12; r++) focus.push(span('.ui-locktime', '.ui-alert'));
-      focus.push(span('.s-dose .ui-warn', '.ui-mark'), span('.s-dose .ui-warn', '.ui-mark'));
-      for (var f = 15; f <= 18; f++) focus.push(span('.s-week .ui-sum', '.s-week .ui-days'));
-      focus.push(span('.s-week .ui-days', '.s-week .ui-hl'));
-      /* dead-zone camera, precomputed in beat order so scrolling back retraces the same path */
-      var cams = [], prev = 0, pa = -1;
-      for (var b = 0; b < T.length; b++) {
-        var ab = b >= 15 ? 5 : actOf(b), A = acts[ab], fr = focus[b], cam = ab === pa ? prev : 0;
-        if (fr) {
-          var lo = margin - fr[0] * A.s, hi = A.win - margin - fr[1] * A.s;
-          var bottomFirst = b === 8 || b === 19 || (b >= 9 && b <= 12);
-          if (lo > hi) cam = bottomFirst ? hi : lo; else cam = clamp(cam, lo, hi);
-        }
-        cam = clamp(cam, Math.min(0, A.win - Hp * A.s), 0);
-        cams.push(Math.round(cam)); prev = cam; pa = ab;
-      }
-      return { acts: acts, cams: cams, D: Math.round(D), H: H, winBottom: winBottom };
+    /* phones: two poses for the phone. Hero = the original layout (phone under the caption, at
+       min(92vw, 360px)). App = the phone as large as fits between the top of the screen and a
+       one-line caption above the step pill, so its screen reads like the real app. The phone is
+       laid out at the app size (scale 1 inside the app, so text stays crisp) and scaled for the hero. */
+    function zoomGeo() {
+      var wasApp = app;
+      if (wasApp) stage.removeAttribute('data-app');
+      var vv = w.visualViewport, vh = vv && vv.scale < 1.01 ? vv.height : w.innerHeight;
+      stage.style.setProperty('--vvh', Math.round(vh) + 'px');
+      var vw = stage.clientWidth, railTop = railNav.offsetTop;
+      var capLine = railTop - 8 - 26, top = 8, bottom = capLine - 6;
+      var W = Math.floor(Math.min(vw - 8, (bottom - top) / 2.08)), Hp = Math.round(W * 2.08);
+      stage.style.setProperty('--W', W + 'px');
+      var y1 = top + Math.max(0, Math.round((bottom - top - Hp) / 2));
+      /* hero: as the original, under the caption and the sentence (+ room for the field tags) */
+      var Wo = Math.min(vw * 0.92, 360);
+      var b0 = Math.max(caps[0].offsetTop + caps[0].offsetHeight, say.offsetTop + say.offsetHeight);
+      var y0 = Math.round(caps0.offsetTop + b0 + 22);
+      stage.style.setProperty('--wt', y0 + 'px');
+      /* inside the app: the spoken sentence sits in the Understand card, the Ring chips on the lock screen */
+      var card = q('.s-confirm .ui-rb'), pad = parseFloat(getComputedStyle(card).paddingLeft) || 12;
+      var cx = (vw - W) / 2 + offX(card, phone), cy = y1 + offIn(card, phone);
+      var fs = parseFloat(getComputedStyle(q('.s-confirm .ui-pad')).fontSize) || 16;
+      stage.style.setProperty('--cap-line', capLine + 'px');
+      stage.style.setProperty('--say-x', Math.round(cx + pad) + 'px');
+      stage.style.setProperty('--say-y', Math.round(cy + pad * 0.8 - capLine) + 'px');
+      stage.style.setProperty('--say-w', Math.round(card.offsetWidth - 2 * pad) + 'px');
+      stage.style.setProperty('--say-fs', (fs * 0.94).toFixed(2) + 'px');
+      stage.style.setProperty('--st-y', Math.round(y1 + Hp * 0.56 - capLine) + 'px');
+      stage.style.setProperty('--sn-y', Math.round(y1 + Hp - W * 0.034 - 22 - capLine) + 'px');
+      if (wasApp) stage.setAttribute('data-app', '');
+      return { y0: y0, s0: Wo / W, y1: y1, top: y1, winBottom: y1 + Hp };
     }
+    function offX(el, anc) { var x = 0; while (el && el !== anc) { x += el.offsetLeft; el = el.offsetParent; } return x; }
 
-    function place(b, a) {
-      if (!geo || b < 0) return;
-      var A = geo.acts[b >= 15 ? 5 : a];
-      stage.style.setProperty('--wt', A.wt + 'px');
-      stage.style.setProperty('--cy', (A.y0 + geo.cams[b]) + 'px');
-      stage.style.setProperty('--cs', A.s);
-      stage.style.setProperty('--D', geo.D + 'px');
-      stage.style.setProperty('--dt', A.wt + 'px');
+    /* per frame on phones: phone transform and hero fade from the zoom progress (transform/opacity only) */
+    function pose(p) {
+      var z = smooth(Z0, Z1, p), y = geo.y0 + (geo.y1 - geo.y0) * z, s = geo.s0 + (1 - geo.s0) * z;
+      var inApp = z > 0.999, key = inApp ? 'app' : y.toFixed(1) + '/' + s.toFixed(4);
+      if (key === lastPose) return;
+      lastPose = key;
+      phone.style.transform = 'translate3d(0,' + y.toFixed(1) + 'px,0) scale(' + s.toFixed(4) + ')';
+      if (inApp !== app) { app = inApp; if (app) stage.setAttribute('data-app', ''); else stage.removeAttribute('data-app'); }
+      if (app) { caps0.style.opacity = ''; caps0.style.transform = ''; }
+      else { caps0.style.opacity = (1 - smooth(0, 0.45, z)).toFixed(3); caps0.style.transform = 'translate3d(0,' + (-z * 0.3 * stage.clientHeight).toFixed(1) + 'px,0)'; }
     }
 
     function rawP(r) {
@@ -213,11 +199,12 @@
         act = a; st.act = a;
         settleUntil = performance.now() + 1100;
         for (var i = 0; i < caps.length; i++) caps[i].style.setProperty('--y', i < a ? -1 : 1);
+        /* the sentence changes size inside the app: refresh the flying words' start size */
+        if (mobile) for (var g = 0; g < ghosts.length; g++) ghosts[g].sf = parseFloat(getComputedStyle(ghosts[g].ph).fontSize) || ghosts[g].sf;
         for (var j = 0; j < rail.length; j++) {
           if (j === a) rail[j].setAttribute('aria-current', 'step'); else rail[j].removeAttribute('aria-current');
         }
       }
-      if (mobile) { place(b, a); settleUntil = Math.max(settleUntil, performance.now() + 900); }
       scr = a === 0 ? 'listen' : a < 3 ? 'confirm' : a === 3 ? 'alarm' : b < 15 ? 'dose' : 'week';
       if (scr !== screen) { screen = scr; st.screen = scr; }
       st.ring = (b === 10 || b === 12) ? 'on' : 'off';
@@ -228,7 +215,9 @@
     function flag(n, on) { if (on) stage.setAttribute('data-' + n, ''); else stage.removeAttribute('data-' + n); }
 
     function clear() {
-      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
+      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt'].concat(MOBILE_VARS).forEach(function (p) { stage.style.removeProperty(p); });
+      stage.removeAttribute('data-app'); app = false; lastPose = '';
+      phone.style.transform = ''; caps0.style.opacity = ''; caps0.style.transform = '';
       ['beat', 'ring', 'saved', 'stopped', 'second', 'marked', 'full', 'speaking'].forEach(function (n) { stage.removeAttribute('data-' + n); });
       stage.classList.remove('ready'); ready = false;
       stage.dataset.act = 0; stage.dataset.screen = 'listen';
@@ -249,7 +238,7 @@
       if (tracking) {
         var sr = stage.getBoundingClientRect(), dv = device.getBoundingClientRect();
         var limit = mobile && geo ? geo.winBottom : dv.top - sr.top + dv.height;
-        var ceil = mobile && geo && act >= 0 ? geo.acts[act].wt : -1e9;
+        var ceil = mobile && geo ? geo.top : -1e9;
         for (var gq = 0; gq < ghosts.length; gq++) {
           var H = ghosts[gq]; if (!H.m) continue;
           var a = H.ph.getBoundingClientRect(), z = H.dd.getBoundingClientRect();
@@ -268,6 +257,7 @@
 
       /* ---- writes ---- */
       if (b !== beat) setBeat(b);
+      if (mobile && geo) pose(p);
       if (!ready) { ready = true; setTimeout(function () { if (ready) stage.classList.add('ready'); }, 90); }
 
       var sayN = Math.min(N, Math.max(autoSay(now), clamp(p / 0.1, 0, 1) * N));
@@ -329,7 +319,10 @@
 
     var rz;
     w.addEventListener('scroll', kick, { passive: true });
-    w.addEventListener('resize', function () { clearTimeout(rz); rz = setTimeout(function () { measure(); kick(); }, 120); });
+    function onResize() { clearTimeout(rz); rz = setTimeout(function () { measure(); kick(); }, 120); }
+    w.addEventListener('resize', onResize);
+    /* Safari: the toolbar collapsing changes the visible height */
+    if (w.visualViewport) w.visualViewport.addEventListener('resize', onResize);
     d.addEventListener('visibilitychange', kick);
     if (d.fonts && d.fonts.ready) d.fonts.ready.then(function () { measure(); kick(); });
     w.addEventListener('load', function () { measure(); kick(); });
