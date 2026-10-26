@@ -240,7 +240,7 @@ svg{overflow:visible}
 }
 
 /* ---------------- LIVE: pinned, scroll-scrubbed demonstration ---------------- */
-/* phones need 640px of height for a readable whole phone under the caption; shorter ones get the static composition */
+/* phones need 640px of height for a readable screen under the caption; shorter ones get the static composition */
 @media (prefers-reduced-motion:no-preference) and (min-height:520px) and (min-width:900px),(prefers-reduced-motion:no-preference) and (min-height:640px){
   .live .story{height:600svh;padding:0}
   .live .stage{--say:0;--rb:0;--days:0;--lit:0;--p:0;position:sticky;top:0;height:100svh;max-width:none;padding:0;gap:0;overflow:hidden;align-items:stretch;
@@ -332,11 +332,11 @@ svg{overflow:visible}
     .live .sample{right:var(--edge);bottom:clamp(26px,3svh + 12px,44px)}
     .live .device::before{content:"";position:absolute;left:50%;top:50%;width:calc(var(--D) * .92);aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:var(--paper-2);z-index:0}
   }
-  /* phones (D-143): the whole phone, scaled into the window under the caption; ringwell.js sets --wt --cy --cs --D --dt --k (see README) */
+  /* phones (D-143): the app screen fills the window under the caption; ringwell.js sets --wt --cy --ph --h-* */
   @media (max-width:899px){
     .live .story{height:560svh}
-    /* --k: phone proportion set by ringwell.js; the fit-to-window rules for the screens are in gallery.css */
-    .live .stage{grid-template-rows:auto;--W:min(92vw,360px);--H:calc(var(--W) * var(--k,2.08))}
+    /* the frameless full-width screen and compact captions are in gallery.css (Ringwell pages only) */
+    .live .stage{grid-template-rows:auto;--W:min(92vw,360px);--H:calc(var(--W) * 2.08)}
     .live .caps{padding:60px var(--edge) 0;align-content:start}
     .live .caps::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:0;height:100svh;background:linear-gradient(var(--paper) calc(100% - 22px),transparent);translate:0 calc(var(--wt,40svh) - 100svh);transition:translate .8s var(--spring);pointer-events:none}
     .live .stage::after{content:"";position:absolute;z-index:7;left:0;right:0;bottom:0;height:calc(62px + max(10px,env(safe-area-inset-bottom)));background:linear-gradient(transparent,var(--paper) 14px);pointer-events:none}
