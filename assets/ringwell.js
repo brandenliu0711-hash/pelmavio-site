@@ -113,8 +113,6 @@
       isActive = getComputedStyle(stage).position === 'sticky';
       mobile = w.innerWidth < 900;
       if (!isActive) return;
-      geo = mobile ? camera() : null;
-      if (!mobile) ['--wt', '--cy', '--ph', '--h-listen', '--h-confirm', '--h-alarm', '--h-dose', '--h-week'].forEach(function (p) { stage.style.removeProperty(p); });
       for (var i = 0; i < ghosts.length; i++) {
         var G = ghosts[i];
         G.tf = parseFloat(getComputedStyle(G.dd).fontSize) || 12;
@@ -123,40 +121,73 @@
         G.dh = G.dd.offsetHeight;
         G.m = true;
       }
+      geo = mobile ? camera() : null;
+      if (!mobile) ['--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
       if (act >= 0) place(beat, act);
     }
 
-    /* phones: the app screen, without a phone frame, fills the content width and every pixel
-       between the step's caption and the step pill. Per act: its top and height. Per screen: a
-       height budget (the smallest window that screen is shown in), so its type never changes
-       between acts and the flying words land on a field of a fixed size. */
+    /* phones: per act, the window under the caption; per beat, a camera position that keeps
+       the region of interest (the field being filled, the alert, the Mark as done card...) in view */
     function camera() {
-      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 12;
-      var tops = [];
-      for (var a = 0; a < caps.length; a++) {
-        var c = caps[a], bottom = offIn(c, caps0) + c.offsetHeight + 14;
-        /* Understand: under the sentence and the field tags that hang below it */
-        if (a === 1) bottom = Math.max(bottom, offIn(say, caps0) + say.offsetHeight + 26);
-        tops.push(Math.round(capTop + bottom));
-      }
-      tops.push(tops[4]);
+      var H = stage.clientHeight, W = phone.offsetWidth, Hp = phone.offsetHeight;
+      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 10;
+      /* acts 3-4: the phone steps back just enough for the dial to crown it, but its text stays >= ~14.5px */
+      var base = parseFloat(getComputedStyle(q('.ui-pad')).fontSize) || 16;
+      var vw = w.innerWidth, S = clamp(14.5 / base, 0.8, 0.9), margin = 14;
+      var D = Math.min(vw - 10, W * S + 72), R = D / 2, half = W * S / 2;
+      var arc = R - Math.sqrt(Math.max(0, R * R - half * half)) + 8;
       var acts = [];
-      for (var b = 0; b < tops.length; b++) acts.push({ wt: tops[b], h: Math.max(120, winBottom - tops[b]) });
-      var H = function (i) { return acts[i].h + 'px'; };
-      stage.style.setProperty('--h-listen', H(0));
-      stage.style.setProperty('--h-confirm', Math.min(acts[1].h, acts[2].h) + 'px');
-      stage.style.setProperty('--h-alarm', H(3));
-      stage.style.setProperty('--h-dose', H(4));
-      stage.style.setProperty('--h-week', H(5));
-      return { acts: acts, winBottom: winBottom };
+      for (var a = 0; a < caps.length; a++) {
+        var c = caps[a], bottom = c.offsetTop + c.offsetHeight;
+        if (a <= 1) bottom = Math.max(bottom, say.offsetTop + say.offsetHeight);
+        /* acts 0-1: leave room for the field tags that hang under the sentence */
+        var wt = Math.round(capTop + bottom + (a <= 1 ? 22 : 12)), s = a >= 3 ? S : 1;
+        var y0 = wt + (a >= 3 ? arc : 0);
+        acts.push({ wt: wt, s: s, y0: y0, win: winBottom - y0 });
+      }
+      /* the week view (beats 15+) no longer needs the dial: the phone steps up into its place */
+      var a4 = acts[4];
+      acts.push({ wt: a4.wt, s: a4.s, y0: a4.wt, win: winBottom - a4.wt });
+      function span(a, b) {
+        var A = q(a), B = b ? q(b) : A;
+        if (!A || !B) return null;
+        return [offIn(A, phone), offIn(B, phone) + B.offsetHeight];
+      }
+      var scrC = q('.s-confirm');
+      var focus = [
+        null,
+        span('.s-confirm .ui-title', '.s-confirm .ui-rb')
+      ];
+      for (var k = 0; k < 5; k++) focus.push(ghosts[k] ? span('.s-confirm [data-f="' + ghosts[k].dd.parentNode.getAttribute('data-f') + '"]') : null);
+      focus.push(span('.s-confirm .ui-rb'));
+      focus.push(scrC ? [offIn(q('.s-confirm .ui-save'), phone), offIn(scrC, phone) + scrC.offsetHeight] : null);
+      for (var r = 9; r <= 12; r++) focus.push(span('.ui-locktime', '.ui-alert'));
+      focus.push(span('.s-dose .ui-warn', '.ui-mark'), span('.s-dose .ui-warn', '.ui-mark'));
+      for (var f = 15; f <= 18; f++) focus.push(span('.s-week .ui-sum', '.s-week .ui-days'));
+      focus.push(span('.s-week .ui-days', '.s-week .ui-hl'));
+      /* dead-zone camera, precomputed in beat order so scrolling back retraces the same path */
+      var cams = [], prev = 0, pa = -1;
+      for (var b = 0; b < T.length; b++) {
+        var ab = b >= 15 ? 5 : actOf(b), A = acts[ab], fr = focus[b], cam = ab === pa ? prev : 0;
+        if (fr) {
+          var lo = margin - fr[0] * A.s, hi = A.win - margin - fr[1] * A.s;
+          var bottomFirst = b === 8 || b === 19 || (b >= 9 && b <= 12);
+          if (lo > hi) cam = bottomFirst ? hi : lo; else cam = clamp(cam, lo, hi);
+        }
+        cam = clamp(cam, Math.min(0, A.win - Hp * A.s), 0);
+        cams.push(Math.round(cam)); prev = cam; pa = ab;
+      }
+      return { acts: acts, cams: cams, D: Math.round(D), H: H, winBottom: winBottom };
     }
 
     function place(b, a) {
       if (!geo || b < 0) return;
       var A = geo.acts[b >= 15 ? 5 : a];
       stage.style.setProperty('--wt', A.wt + 'px');
-      stage.style.setProperty('--cy', A.wt + 'px');
-      stage.style.setProperty('--ph', A.h + 'px');
+      stage.style.setProperty('--cy', (A.y0 + geo.cams[b]) + 'px');
+      stage.style.setProperty('--cs', A.s);
+      stage.style.setProperty('--D', geo.D + 'px');
+      stage.style.setProperty('--dt', A.wt + 'px');
     }
 
     function rawP(r) {
@@ -197,7 +228,7 @@
     function flag(n, on) { if (on) stage.setAttribute('data-' + n, ''); else stage.removeAttribute('data-' + n); }
 
     function clear() {
-      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--ph', '--h-listen', '--h-confirm', '--h-alarm', '--h-dose', '--h-week'].forEach(function (p) { stage.style.removeProperty(p); });
+      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
       ['beat', 'ring', 'saved', 'stopped', 'second', 'marked', 'full', 'speaking'].forEach(function (n) { stage.removeAttribute('data-' + n); });
       stage.classList.remove('ready'); ready = false;
       stage.dataset.act = 0; stage.dataset.screen = 'listen';
