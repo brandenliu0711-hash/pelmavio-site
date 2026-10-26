@@ -113,6 +113,8 @@
       isActive = getComputedStyle(stage).position === 'sticky';
       mobile = w.innerWidth < 900;
       if (!isActive) return;
+      geo = mobile ? camera() : null;
+      if (!mobile) ['--wt', '--cy', '--cs', '--D', '--dt', '--k'].forEach(function (p) { stage.style.removeProperty(p); });
       for (var i = 0; i < ghosts.length; i++) {
         var G = ghosts[i];
         G.tf = parseFloat(getComputedStyle(G.dd).fontSize) || 12;
@@ -121,73 +123,61 @@
         G.dh = G.dd.offsetHeight;
         G.m = true;
       }
-      geo = mobile ? camera() : null;
-      if (!mobile) ['--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
       if (act >= 0) place(beat, act);
     }
 
-    /* phones: per act, the window under the caption; per beat, a camera position that keeps
-       the region of interest (the field being filled, the alert, the Mark as done card...) in view */
+    /* phones: per act, the window between the caption and the step pill; the whole phone is
+       scaled to fit inside it (frame and full screen, no cropping, nothing under the pill).
+       Proportion k (height / width) goes from 2.08 down to 1.85 on short screens, where the
+       screens' em-based type is bounded by their height (cqh), so the text stays as large as it can. */
     function camera() {
-      var H = stage.clientHeight, W = phone.offsetWidth, Hp = phone.offsetHeight;
-      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 10;
-      /* acts 3-4: the phone steps back just enough for the dial to crown it, but its text stays >= ~14.5px */
-      var base = parseFloat(getComputedStyle(q('.ui-pad')).fontSize) || 16;
-      var vw = w.innerWidth, S = clamp(14.5 / base, 0.8, 0.9), margin = 14;
-      var D = Math.min(vw - 10, W * S + 72), R = D / 2, half = W * S / 2;
-      var arc = R - Math.sqrt(Math.max(0, R * R - half * half)) + 8;
-      var acts = [];
+      var W = phone.offsetWidth, vw = w.innerWidth;
+      /* short screens: drop the Understand paragraph only if it would push the sentence down */
+      stage.classList.remove('p1-off');
+      var p1 = caps[1].lastElementChild, c0 = caps[0].querySelector('.sub') || caps[0].lastElementChild;
+      if (stage.clientHeight < 760 && p1 && c0 && offIn(p1, caps0) + p1.offsetHeight > offIn(c0, caps0) + c0.offsetHeight + 4) stage.classList.add('p1-off');
+      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 14;
+      var tops = [];
       for (var a = 0; a < caps.length; a++) {
         var c = caps[a], bottom = c.offsetTop + c.offsetHeight;
         if (a <= 1) bottom = Math.max(bottom, say.offsetTop + say.offsetHeight);
         /* acts 0-1: leave room for the field tags that hang under the sentence */
-        var wt = Math.round(capTop + bottom + (a <= 1 ? 22 : 12)), s = a >= 3 ? S : 1;
-        var y0 = wt + (a >= 3 ? arc : 0);
-        acts.push({ wt: wt, s: s, y0: y0, win: winBottom - y0 });
+        tops.push(Math.round(capTop + bottom + (a <= 1 ? 22 : 12)));
       }
-      /* the week view (beats 15+) no longer needs the dial: the phone steps up into its place */
-      var a4 = acts[4];
-      acts.push({ wt: a4.wt, s: a4.s, y0: a4.wt, win: winBottom - a4.wt });
-      function span(a, b) {
-        var A = q(a), B = b ? q(b) : A;
-        if (!A || !B) return null;
-        return [offIn(A, phone), offIn(B, phone) + B.offsetHeight];
-      }
-      var scrC = q('.s-confirm');
-      var focus = [
-        null,
-        span('.s-confirm .ui-title', '.s-confirm .ui-rb')
-      ];
-      for (var k = 0; k < 5; k++) focus.push(ghosts[k] ? span('.s-confirm [data-f="' + ghosts[k].dd.parentNode.getAttribute('data-f') + '"]') : null);
-      focus.push(span('.s-confirm .ui-rb'));
-      focus.push(scrC ? [offIn(q('.s-confirm .ui-save'), phone), offIn(scrC, phone) + scrC.offsetHeight] : null);
-      for (var r = 9; r <= 12; r++) focus.push(span('.ui-locktime', '.ui-alert'));
-      focus.push(span('.s-dose .ui-warn', '.ui-mark'), span('.s-dose .ui-warn', '.ui-mark'));
-      for (var f = 15; f <= 18; f++) focus.push(span('.s-week .ui-sum', '.s-week .ui-days'));
-      focus.push(span('.s-week .ui-days', '.s-week .ui-hl'));
-      /* dead-zone camera, precomputed in beat order so scrolling back retraces the same path */
-      var cams = [], prev = 0, pa = -1;
-      for (var b = 0; b < T.length; b++) {
-        var ab = b >= 15 ? 5 : actOf(b), A = acts[ab], fr = focus[b], cam = ab === pa ? prev : 0;
-        if (fr) {
-          var lo = margin - fr[0] * A.s, hi = A.win - margin - fr[1] * A.s;
-          var bottomFirst = b === 8 || b === 19 || (b >= 9 && b <= 12);
-          if (lo > hi) cam = bottomFirst ? hi : lo; else cam = clamp(cam, lo, hi);
+      var winMin = 1e9;
+      for (var t = 0; t < tops.length; t++) winMin = Math.min(winMin, winBottom - tops[t]);
+      var k = clamp(winMin / W, 1.85, 2.08);
+      stage.style.setProperty('--k', k.toFixed(3));
+      var Hp = W * k;
+      function fit(top, dial) {
+        var win = winBottom - top, s = Math.min(1, win / Hp), D = 0, arc = 0;
+        if (dial) {
+          /* acts 3-4: the dial crowns the phone; solve scale and crown height together */
+          for (var i = 0; i < 6; i++) {
+            D = Math.min(vw - 10, W * s + 72);
+            var R = D / 2, half = W * s / 2;
+            arc = R - Math.sqrt(Math.max(0, R * R - half * half)) + 8;
+            s = Math.min(0.92, (win - arc) / Hp);
+          }
         }
-        cam = clamp(cam, Math.min(0, A.win - Hp * A.s), 0);
-        cams.push(Math.round(cam)); prev = cam; pa = ab;
+        var spare = Math.max(0, win - arc - Hp * s), off = Math.round(spare / 2);
+        return { wt: top, s: +s.toFixed(4), y0: Math.round(top + off + arc), dt: top + off, D: Math.round(D) };
       }
-      return { acts: acts, cams: cams, D: Math.round(D), H: H, winBottom: winBottom };
+      var acts = [];
+      for (var b = 0; b < tops.length; b++) acts.push(fit(tops[b], b >= 3));
+      /* the week view (beats 15+) no longer needs the dial: the phone steps up into its place */
+      acts.push(fit(tops[4], false));
+      return { acts: acts, winBottom: winBottom };
     }
 
     function place(b, a) {
       if (!geo || b < 0) return;
       var A = geo.acts[b >= 15 ? 5 : a];
       stage.style.setProperty('--wt', A.wt + 'px');
-      stage.style.setProperty('--cy', (A.y0 + geo.cams[b]) + 'px');
+      stage.style.setProperty('--cy', A.y0 + 'px');
       stage.style.setProperty('--cs', A.s);
-      stage.style.setProperty('--D', geo.D + 'px');
-      stage.style.setProperty('--dt', A.wt + 'px');
+      if (A.D) stage.style.setProperty('--D', A.D + 'px');
+      stage.style.setProperty('--dt', A.dt + 'px');
     }
 
     function rawP(r) {
@@ -228,7 +218,8 @@
     function flag(n, on) { if (on) stage.setAttribute('data-' + n, ''); else stage.removeAttribute('data-' + n); }
 
     function clear() {
-      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt'].forEach(function (p) { stage.style.removeProperty(p); });
+      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt', '--k'].forEach(function (p) { stage.style.removeProperty(p); });
+      stage.classList.remove('p1-off');
       ['beat', 'ring', 'saved', 'stopped', 'second', 'marked', 'full', 'speaking'].forEach(function (n) { stage.removeAttribute('data-' + n); });
       stage.classList.remove('ready'); ready = false;
       stage.dataset.act = 0; stage.dataset.screen = 'listen';

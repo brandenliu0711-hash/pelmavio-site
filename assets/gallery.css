@@ -9,3 +9,29 @@
 .shot-list img{display:block;width:100%;height:auto;border-radius:11%/5%;background:var(--paper-2);box-shadow:0 0 0 1px var(--line),0 18px 40px -22px var(--shadow)}
 .shot-list figcaption{margin-top:14px;font:600 clamp(.9375rem,.88rem + .25vw,1.0625rem)/1.35 var(--display);color:var(--ink);text-wrap:balance}
 @media (prefers-color-scheme:dark){.shot-list img{box-shadow:0 0 0 1px var(--line-2),0 18px 40px -22px var(--shadow)}}
+
+/* Story on phones (pinned mode, see style.css "LIVE"): the whole phone fits between the caption and the
+   step pill (ringwell.js sets --k and --cs per act). Screens are size containers, so their em-based type is
+   bounded by height as well as width. Kept here, not in style.css, because only Ringwell pages need it. */
+@media (prefers-reduced-motion:no-preference) and (min-height:640px) and (max-width:899px){
+  .live .scr{container-type:size}
+  .live .s-listen .ui-pad{font-size:min(5.3cqi,3.7cqh)}
+  .live .s-confirm .ui-pad{font-size:min(5.3cqi,2.8cqh)}
+  .live .s-confirm .ui-row2{display:none}
+  .live .s-confirm .ui-toast{font-size:min(4.9cqi,2.55cqh)}
+  .live .s-alarm .ui-lock{font-size:min(5.3cqi,5cqh)}
+  .live .s-dose .ui-pad{font-size:min(5.3cqi,3.9cqh)}
+  .live .s-week .ui-pad{font-size:min(5.3cqi,3cqh)}
+  /* short screens: if the Understand paragraph would push the sentence down, it is left to screen
+     readers (the tagged sentence says the same); ringwell.js sets .p1-off */
+  .live .p1-off .cap1>p{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  /* short screens: the idle waveform row goes (the phone shows its own), captions tighten */
+  @media (max-height:760px){
+    .live .voice{display:none}
+    .live .cap h1{font-size:min(10.4vw,5.4svh)}
+    :lang(zh).live .cap h1,.live :lang(zh) .cap h1{font-size:min(9.4vw,4.9svh)}
+    .live .cap h2{font-size:min(7.4vw,4svh)}
+    .live .cap p{font-size:min(4.2vw,2.3svh)}
+    .live .sentence{font-size:min(5.7vw,3svh)}
+  }
+}
