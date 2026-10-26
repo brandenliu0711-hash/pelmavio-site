@@ -114,7 +114,7 @@
       mobile = w.innerWidth < 900;
       if (!isActive) return;
       geo = mobile ? camera() : null;
-      if (!mobile) ['--wt', '--cy', '--cs', '--D', '--dt', '--k'].forEach(function (p) { stage.style.removeProperty(p); });
+      if (!mobile) ['--wt', '--cy', '--ph', '--h-listen', '--h-confirm', '--h-alarm', '--h-dose', '--h-week'].forEach(function (p) { stage.style.removeProperty(p); });
       for (var i = 0; i < ghosts.length; i++) {
         var G = ghosts[i];
         G.tf = parseFloat(getComputedStyle(G.dd).fontSize) || 12;
@@ -126,47 +126,28 @@
       if (act >= 0) place(beat, act);
     }
 
-    /* phones: per act, the window between the caption and the step pill; the whole phone is
-       scaled to fit inside it (frame and full screen, no cropping, nothing under the pill).
-       Proportion k (height / width) goes from 2.08 down to 1.85 on short screens, where the
-       screens' em-based type is bounded by their height (cqh), so the text stays as large as it can. */
+    /* phones: the app screen, without a phone frame, fills the content width and every pixel
+       between the step's caption and the step pill. Per act: its top and height. Per screen: a
+       height budget (the smallest window that screen is shown in), so its type never changes
+       between acts and the flying words land on a field of a fixed size. */
     function camera() {
-      var W = phone.offsetWidth, vw = w.innerWidth;
-      /* short screens: drop the Understand paragraph only if it would push the sentence down */
-      stage.classList.remove('p1-off');
-      var p1 = caps[1].lastElementChild, c0 = caps[0].querySelector('.sub') || caps[0].lastElementChild;
-      if (stage.clientHeight < 760 && p1 && c0 && offIn(p1, caps0) + p1.offsetHeight > offIn(c0, caps0) + c0.offsetHeight + 4) stage.classList.add('p1-off');
-      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 14;
+      var capTop = caps0.offsetTop, winBottom = railNav.offsetTop - 12;
       var tops = [];
       for (var a = 0; a < caps.length; a++) {
-        var c = caps[a], bottom = c.offsetTop + c.offsetHeight;
-        if (a <= 1) bottom = Math.max(bottom, say.offsetTop + say.offsetHeight);
-        /* acts 0-1: leave room for the field tags that hang under the sentence */
-        tops.push(Math.round(capTop + bottom + (a <= 1 ? 22 : 12)));
+        var c = caps[a], bottom = offIn(c, caps0) + c.offsetHeight + 14;
+        /* Understand: under the sentence and the field tags that hang below it */
+        if (a === 1) bottom = Math.max(bottom, offIn(say, caps0) + say.offsetHeight + 26);
+        tops.push(Math.round(capTop + bottom));
       }
-      var winMin = 1e9;
-      for (var t = 0; t < tops.length; t++) winMin = Math.min(winMin, winBottom - tops[t]);
-      var k = clamp(winMin / W, 1.85, 2.08);
-      stage.style.setProperty('--k', k.toFixed(3));
-      var Hp = W * k;
-      function fit(top, dial) {
-        var win = winBottom - top, s = Math.min(1, win / Hp), D = 0, arc = 0;
-        if (dial) {
-          /* acts 3-4: the dial crowns the phone; solve scale and crown height together */
-          for (var i = 0; i < 6; i++) {
-            D = Math.min(vw - 10, W * s + 72);
-            var R = D / 2, half = W * s / 2;
-            arc = R - Math.sqrt(Math.max(0, R * R - half * half)) + 8;
-            s = Math.min(0.92, (win - arc) / Hp);
-          }
-        }
-        var spare = Math.max(0, win - arc - Hp * s), off = Math.round(spare / 2);
-        return { wt: top, s: +s.toFixed(4), y0: Math.round(top + off + arc), dt: top + off, D: Math.round(D) };
-      }
+      tops.push(tops[4]);
       var acts = [];
-      for (var b = 0; b < tops.length; b++) acts.push(fit(tops[b], b >= 3));
-      /* the week view (beats 15+) no longer needs the dial: the phone steps up into its place */
-      acts.push(fit(tops[4], false));
+      for (var b = 0; b < tops.length; b++) acts.push({ wt: tops[b], h: Math.max(120, winBottom - tops[b]) });
+      var H = function (i) { return acts[i].h + 'px'; };
+      stage.style.setProperty('--h-listen', H(0));
+      stage.style.setProperty('--h-confirm', Math.min(acts[1].h, acts[2].h) + 'px');
+      stage.style.setProperty('--h-alarm', H(3));
+      stage.style.setProperty('--h-dose', H(4));
+      stage.style.setProperty('--h-week', H(5));
       return { acts: acts, winBottom: winBottom };
     }
 
@@ -174,10 +155,8 @@
       if (!geo || b < 0) return;
       var A = geo.acts[b >= 15 ? 5 : a];
       stage.style.setProperty('--wt', A.wt + 'px');
-      stage.style.setProperty('--cy', A.y0 + 'px');
-      stage.style.setProperty('--cs', A.s);
-      if (A.D) stage.style.setProperty('--D', A.D + 'px');
-      stage.style.setProperty('--dt', A.dt + 'px');
+      stage.style.setProperty('--cy', A.wt + 'px');
+      stage.style.setProperty('--ph', A.h + 'px');
     }
 
     function rawP(r) {
@@ -218,8 +197,7 @@
     function flag(n, on) { if (on) stage.setAttribute('data-' + n, ''); else stage.removeAttribute('data-' + n); }
 
     function clear() {
-      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--cs', '--D', '--dt', '--k'].forEach(function (p) { stage.style.removeProperty(p); });
-      stage.classList.remove('p1-off');
+      ['--say', '--p', '--rb', '--lit', '--days', '--wt', '--cy', '--ph', '--h-listen', '--h-confirm', '--h-alarm', '--h-dose', '--h-week'].forEach(function (p) { stage.style.removeProperty(p); });
       ['beat', 'ring', 'saved', 'stopped', 'second', 'marked', 'full', 'speaking'].forEach(function (n) { stage.removeAttribute('data-' + n); });
       stage.classList.remove('ready'); ready = false;
       stage.dataset.act = 0; stage.dataset.screen = 'listen';

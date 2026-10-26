@@ -10,28 +10,48 @@
 .shot-list figcaption{margin-top:14px;font:600 clamp(.9375rem,.88rem + .25vw,1.0625rem)/1.35 var(--display);color:var(--ink);text-wrap:balance}
 @media (prefers-color-scheme:dark){.shot-list img{box-shadow:0 0 0 1px var(--line-2),0 18px 40px -22px var(--shadow)}}
 
-/* Story on phones (pinned mode, see style.css "LIVE"): the whole phone fits between the caption and the
-   step pill (ringwell.js sets --k and --cs per act). Screens are size containers, so their em-based type is
-   bounded by height as well as width. Kept here, not in style.css, because only Ringwell pages need it. */
+/* Story on phones (pinned mode, see style.css "LIVE"). The app screen, without a phone frame, takes the
+   content width and all the height between a one-headline caption and the step pill; ringwell.js sets
+   --cy/--ph per act and a height budget per screen (--h-*), which bounds that screen's em-based type.
+   Secondary paragraphs stay in the page for screen readers (and show in the static version).
+   Kept here, not in style.css, because only Ringwell pages need it. */
 @media (prefers-reduced-motion:no-preference) and (min-height:640px) and (max-width:899px){
-  .live .scr{container-type:size}
-  .live .s-listen .ui-pad{font-size:min(5.3cqi,3.7cqh)}
-  .live .s-confirm .ui-pad{font-size:min(5.3cqi,2.8cqh)}
+  .live .caps{padding:12px 16px 0}
+  .live :is(.cap0,.cap2,.cap3,.cap4){position:absolute;left:0;right:16px;top:0}
+  .live .cap0{top:48px}
+  .live .cap :is(p,.stopnote){position:absolute;width:1px;height:1px;margin:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .live .voice,.live .dial{display:none}
+  /* Ring: the alarm status and the Stop note become chips on the empty lower half of the lock screen */
+  .live .cap.cap3>.status{position:absolute;z-index:5;grid-area:auto;left:0;right:0;width:auto;height:auto;overflow:visible;clip-path:none;top:calc(var(--cy,0px) + var(--ph,0px) * .55 - 12px);margin:0;justify-items:center;font-size:.9375rem}
+  .live .cap3>.status span{padding:.55em 1em;border-radius:999px;background:var(--paper);box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}
+  .live .cap.cap3>.stopnote{position:absolute;z-index:5;grid-area:auto;left:12px;right:12px;top:calc(var(--cy,0px) + var(--ph,0px) - 28px);transform:translateY(-100%);width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal;
+    padding:.8em 1em;border-radius:18px;background:var(--paper);color:var(--ink-2);font-size:.9375rem;line-height:1.4;text-align:center;box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}
+  .live .cap h2{margin:0;padding-right:52px}
+  :lang(zh).live .cap h2,.live :lang(zh) .cap h2{font-size:min(6.8vw,4svh)}
+  :lang(zh).live .sentence,.live :lang(zh) .sentence{line-height:1.78}
+  .live .say{margin-top:10px}
+  .live [data-act="0"] .say{opacity:0;transform:translateY(.75rem);pointer-events:none}
+  .live .skipstory{top:10px;right:12px;width:44px;padding:0;gap:0;justify-content:center;font-size:0}
+  .live .skipstory svg{width:18px;height:18px}
+  .live .phone{left:16px;right:16px;width:auto;margin-left:0;height:var(--ph,60svh);padding:0;border-radius:24px;background:var(--a-bg);scale:none;
+    box-shadow:0 0 0 1px var(--line-2),0 24px 48px -32px var(--shadow)}
+  .live .ready .phone{transition:translate .85s var(--spring),height .85s var(--spring)}
+  .live .phone::after{display:none}
+  .live .scr{inset:0;border-radius:24px}
+  .live .ui-pad{padding:1.2em 1.15em 1.1em}
+  .live .ui-lock{padding-top:1.7em}
+  .live .s-listen .ui-pad{font-size:min(4.8cqi,calc(var(--h-listen,600px) / 25))}
+  .live .s-confirm .ui-pad{font-size:min(4.8cqi,calc(var(--h-confirm,600px) / 31))}
+  .live .s-confirm .ui-toast{font-size:min(4.45cqi,calc(var(--h-confirm,600px) / 33.4))}
   .live .s-confirm .ui-row2{display:none}
-  .live .s-confirm .ui-toast{font-size:min(4.9cqi,2.55cqh)}
-  .live .s-alarm .ui-lock{font-size:min(5.3cqi,5cqh)}
-  .live .s-dose .ui-pad{font-size:min(5.3cqi,3.9cqh)}
-  .live .s-week .ui-pad{font-size:min(5.3cqi,3cqh)}
-  /* short screens: if the Understand paragraph would push the sentence down, it is left to screen
-     readers (the tagged sentence says the same); ringwell.js sets .p1-off */
-  .live .p1-off .cap1>p{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-  /* short screens: the idle waveform row goes (the phone shows its own), captions tighten */
+  .live .ui-fields dt{font-size:.88em}
+  .live .s-alarm .ui-lock{font-size:min(4.8cqi,calc(var(--h-alarm,600px) / 17))}
+  .live .s-dose .ui-pad{font-size:min(4.8cqi,calc(var(--h-dose,600px) / 22))}
+  .live .s-week .ui-pad{font-size:min(4.8cqi,calc(var(--h-week,600px) / 29))}
   @media (max-height:760px){
-    .live .voice{display:none}
     .live .cap h1{font-size:min(10.4vw,5.4svh)}
     :lang(zh).live .cap h1,.live :lang(zh) .cap h1{font-size:min(9.4vw,4.9svh)}
     .live .cap h2{font-size:min(7.4vw,4svh)}
-    .live .cap p{font-size:min(4.2vw,2.3svh)}
     .live .sentence{font-size:min(5.7vw,3svh)}
   }
 }
