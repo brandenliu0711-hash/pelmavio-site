@@ -213,8 +213,8 @@ svg{overflow:visible}
 .ui-hl{display:flex;justify-content:space-between;align-items:baseline;gap:.6em;margin-top:.45em!important;padding:.75em .85em;border-radius:.9em;background:var(--a-surface);border:1px solid var(--a-border);font-size:.9em;transition:opacity .4s .1s,translate .7s var(--spring) .1s}
 .ui-hl span{color:var(--a-muted)}
 .ui-hl b{font-size:1.15em;white-space:nowrap}
-.live .stage[data-beat] :is(.ui-sum,.ui-hl,.ui-hl-h){opacity:0;translate:0 .8em}
-.live .stage[data-full] :is(.ui-sum,.ui-hl,.ui-hl-h){opacity:1;translate:0 0}
+.live .stage :is(.ui-sum,.ui-hl,.ui-hl-h){opacity:0;translate:0 .8em}
+.live [data-full] :is(.ui-sum,.ui-hl,.ui-hl-h){opacity:1;translate:0 0}
 
 /* dial (live only), ripples */
 .dial{display:none}
@@ -240,8 +240,7 @@ svg{overflow:visible}
 }
 
 /* ---------------- LIVE: pinned, scroll-scrubbed demonstration ---------------- */
-/* phones need 640px of height for a readable screen under the caption; shorter ones get the static composition */
-@media (prefers-reduced-motion:no-preference) and (min-height:520px) and (min-width:900px),(prefers-reduced-motion:no-preference) and (min-height:640px){
+@media (prefers-reduced-motion:no-preference) and (min-height:520px){
   .live .story{height:600svh;padding:0}
   .live .stage{--say:0;--rb:0;--days:0;--lit:0;--p:0;position:sticky;top:0;height:100svh;max-width:none;padding:0;gap:0;overflow:hidden;align-items:stretch;
     --W:min(42svh,300px);--H:calc(var(--W) * 2.08)}
@@ -332,14 +331,13 @@ svg{overflow:visible}
     .live .sample{right:var(--edge);bottom:clamp(26px,3svh + 12px,44px)}
     .live .device::before{content:"";position:absolute;left:50%;top:50%;width:calc(var(--D) * .92);aspect-ratio:1;translate:-50% -50%;border-radius:50%;background:var(--paper-2);z-index:0}
   }
-  /* phones (D-143): the app screen fills the window under the caption; ringwell.js sets --wt --cy --ph --h-* */
+  /* phones (D-143): big phone in a window under the caption; ringwell.js sets --wt --cy --cs --D --dt (see README) */
   @media (max-width:899px){
     .live .story{height:560svh}
-    /* the frameless full-width screen and compact captions are in gallery.css (Ringwell pages only) */
     .live .stage{grid-template-rows:auto;--W:min(92vw,360px);--H:calc(var(--W) * 2.08)}
     .live .caps{padding:60px var(--edge) 0;align-content:start}
-    .live .caps::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:0;height:100svh;background:linear-gradient(var(--paper) calc(100% - 22px),transparent);translate:0 calc(var(--wt,40svh) - 100svh);transition:translate .8s var(--spring);pointer-events:none}
-    .live .stage::after{content:"";position:absolute;z-index:7;left:0;right:0;bottom:0;height:calc(62px + max(10px,env(safe-area-inset-bottom)));background:linear-gradient(transparent,var(--paper) 14px);pointer-events:none}
+    .live .caps::before{content:"";position:absolute;z-index:-1;left:0;right:0;top:0;height:100svh;background:linear-gradient(var(--paper) calc(100% - 22px),transparent);translate:0 calc(var(--wt,40svh) + 6px - 100svh);transition:translate .8s var(--spring);pointer-events:none}
+    .live .stage::after{content:"";position:absolute;z-index:7;left:0;right:0;bottom:0;height:calc(84px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--paper) 30px);pointer-events:none}
     .live .cap h1{font-size:min(10.4vw,6.2svh)}
     :lang(zh).live .cap h1,.live :lang(zh) .cap h1{font-size:min(9.4vw,5.6svh)}
     .live .cap .sub{font-size:min(5vw,2.9svh);margin:.4em 0 0}
