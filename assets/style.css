@@ -86,6 +86,7 @@ svg{overflow:visible}
 .go{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;background:var(--green);color:var(--paper);font-weight:700;text-decoration:none;white-space:nowrap;transition:scale .45s var(--spring),box-shadow .3s,background-color .2s;box-shadow:0 10px 24px -14px var(--shadow)}
 .go:hover{box-shadow:0 16px 30px -14px var(--shadow);scale:1.02}
 .go:active{scale:.97;transition-duration:.12s}
+.store{display:inline-block;line-height:0}.store img{height:50px;width:auto}
 .go .arrow{transition:translate .4s var(--spring)}
 .go:hover .arrow{translate:4px 0}
 
