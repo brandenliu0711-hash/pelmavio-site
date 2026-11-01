@@ -71,6 +71,8 @@ for (const p of pages) {
       if (resolve(p, u.replace('https://pelmavio.com', '')) === false) err(r + ' 站内绝对链接断链 ' + u);
       continue;
     }
+    // the one allowed outbound link: Ringwell's App Store page (official badge, launch 2026-10-31)
+    if (u === 'https://apps.apple.com/app/id6824711765') continue;
     if (/^(https?:)?\/\//.test(u)) { err(r + ' 外链 ' + u); continue; }
     if (u.startsWith('#')) { if (!h.includes('id="' + u.slice(1) + '"')) err(r + ' 锚点失效 ' + u); continue; }
     const target = resolve(p, u);
